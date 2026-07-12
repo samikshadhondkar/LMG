@@ -1,27 +1,26 @@
 import api from './api';
 
-export async function getVehicles(filter = {}) {
-  const query = new URLSearchParams(filter).toString();
-  const response = await api.get(`/vehicles${query ? `?${query}` : ''}`);
-  return response.data.data;
-}
+export const getVehicles = async (params = {}) => {
+  const { data } = await api.get('/vehicles', { params });
+  return data;
+};
 
-export async function getVehicle(id) {
-  const response = await api.get(`/vehicles/${id}`);
-  return response.data.data;
-}
+export const getVehicleById = async (id) => {
+  const { data } = await api.get(`/vehicles/${id}`);
+  return data;
+};
 
-export async function createVehicle(payload) {
-  const response = await api.post('/vehicles', payload);
-  return response.data.data;
-}
+export const createVehicle = async (payload) => {
+  const { data } = await api.post('/vehicles', payload);
+  return data;
+};
 
-export async function updateVehicle(id, payload) {
-  const response = await api.put(`/vehicles/${id}`, payload);
-  return response.data.data;
-}
+export const updateVehicle = async (id, payload) => {
+  const { data } = await api.put(`/vehicles/${id}`, payload);
+  return data;
+};
 
-export async function deleteVehicle(id) {
-  const response = await api.delete(`/vehicles/${id}`);
-  return response.data.data;
-}
+export const deleteVehicle = async (id) => {
+  const { data } = await api.delete(`/vehicles/${id}`);
+  return data;
+};

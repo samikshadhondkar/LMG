@@ -1,18 +1,32 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
 const {
-createTrip,
-getTrips,
-updateTrip,
-deleteTrip
-} = require("../controllers/tripController");
+  createTrip,
+  getAllTrips,
+  getTripById,
+  updateTrip,
+  deleteTrip,
+} = require('../controllers/tripController');
 
+const {
+  tripValidationRules,
+  tripIdValidationRule,
+} = require('../middleware/tripValidator');
 
-router.post("/", createTrip);
-router.get("/", getTrips);
-router.put("/:id", updateTrip);
-router.delete("/:id", deleteTrip);
+// POST /api/trips
+router.post('/', tripValidationRules, createTrip);
 
+// GET /api/trips
+router.get('/', getAllTrips);
+
+// GET /api/trips/:id
+router.get('/:id', tripIdValidationRule, getTripById);
+
+// PUT /api/trips/:id
+router.put('/:id', tripIdValidationRule, tripValidationRules, updateTrip);
+
+// DELETE /api/trips/:id
+router.delete('/:id', tripIdValidationRule, deleteTrip);
 
 module.exports = router;

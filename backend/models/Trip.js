@@ -1,47 +1,59 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const tripSchema = new mongoose.Schema(
   {
-    vehicle: {
+    vehicleId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vehicle",
-      required: true,
+      ref: 'Vehicle',
+      required: [true, 'Vehicle ID is required'],
     },
-
     driver: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      name: {
+        type: String,
+        required: [true, 'Driver name is required'],
+        trim: true,
+      },
+      licenseNumber: {
+        type: String,
+        required: [true, 'Driver license number is required'],
+        trim: true,
+      },
+      contactNumber: {
+        type: String,
+        trim: true,
+      },
     },
-
     source: {
       type: String,
-      required: true,
+      required: [true, 'Source location is required'],
+      trim: true,
     },
-
     destination: {
       type: String,
-      required: true,
+      required: [true, 'Destination location is required'],
+      trim: true,
     },
-
     startTime: {
       type: Date,
-      required: true,
+      required: [true, 'Start time is required'],
     },
-
     endTime: {
       type: Date,
     },
-
     status: {
       type: String,
-      enum: [
-        "Scheduled",
-        "In Progress",
-        "Completed",
-        "Cancelled"
-      ],
-      default: "Scheduled",
+      enum: ['scheduled', 'ongoing', 'completed', 'cancelled'],
+      default: 'scheduled',
+    },
+    distance: {
+      type: Number,
+      min: [0, 'Distance cannot be negative'],
+      default: 0,
+    },
+    passengerCount: {
+      type: Number,
+      min: [0, 'Passenger count cannot be negative'],
+      default: 0,
     },
   },
   {
@@ -49,4 +61,4 @@ const tripSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Trip", tripSchema);
+module.exports = mongoose.model('Trip', tripSchema);

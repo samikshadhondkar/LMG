@@ -1,123 +1,184 @@
-const Trip = require("../models/Trip");
+const { validationResult } = require('express-validator');
+const Trip = require('../models/Trip');
 
-// Create Trip
-exports.createTrip = async (req, res) => {
+/**
+ * @desc    Create a new trip
+ * @route   POST /api/trips
+ */
+const createTrip = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array(),
+      });
+    }
+
     const trip = await Trip.create(req.body);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      message: "Trip created successfully",
+      message: 'Trip created successfully',
       data: trip,
     });
-
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: 'Failed to create trip',
+      error: error.message,
     });
   }
 };
 
-
-// Get All Trips
-exports.getTrips = async (req, res) => {
+/**
+ * @desc    Get all trips (supports optional ?status= filter)
+ * @route   GET /api/trips
+ */
+const getAllTrips = async (req, res) => {
   try {
-    const trips = await Trip.find()
-      .populate("vehicle")
-      .populate("driver");
+    const filter = {};
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
 
-    res.status(200).json({
+    const trips = await Trip.find(filter).sort({ createdAt: -1 });
+
+    return res.status(200).json({
       success: true,
+      count: trips.length,
       data: trips,
     });
-
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: 'Failed to fetch trips',
+      error: error.message,
     });
   }
 };
 
-
-// Get Single Trip
-exports.getTripById = async (req, res) => {
+/**
+ * @desc    Get a single trip by ID
+ * @route   GET /api/trips/:id
+ */
+const getTripById = async (req, res) => {
   try {
-    const trip = await Trip.findById(req.params.id)
-      .populate("vehicle")
-      .populate("driver");
+    const trip = await Trip.findById(req.params.id);
 
     if (!trip) {
       return res.status(404).json({
-        message: "Trip not found",
+        success: false,
+        message: 'Trip not found',
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: trip,
     });
-
   } catch (error) {
-    res.status(500).json({
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid trip ID format',
+      });
+    }
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: 'Failed to fetch trip',
+      error: error.message,
     });
   }
 };
 
-
-// Update Trip
-exports.updateTrip = async (req, res) => {
+/**
+ * @desc    Update a trip by ID
+ * @route   PUT /api/trips/:id
+ */
+const updateTrip = async (req, res) => {
   try {
-    const trip = await Trip.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array(),
+      });
+    }
+
+    const trip = await Trip.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!trip) {
       return res.status(404).json({
-        message: "Trip not found",
+        success: false,
+        message: 'Trip not found',
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Trip updated successfully",
+      message: 'Trip updated successfully',
       data: trip,
     });
-
   } catch (error) {
-    res.status(500).json({
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid trip ID format',
+      });
+    }
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: 'Failed to update trip',
+      error: error.message,
     });
   }
 };
 
-
-// Delete Trip
-exports.deleteTrip = async (req, res) => {
+/**
+ * @desc    Delete a trip by ID
+ * @route   DELETE /api/trips/:id
+ */
+const deleteTrip = async (req, res) => {
   try {
     const trip = await Trip.findByIdAndDelete(req.params.id);
 
     if (!trip) {
       return res.status(404).json({
-        message: "Trip not found",
+        success: false,
+        message: 'Trip not found',
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Trip deleted successfully",
+      message: 'Trip deleted successfully',
+      data: trip,
     });
-
   } catch (error) {
-    res.status(500).json({
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid trip ID format',
+      });
+    }
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: 'Failed to delete trip',
+      error: error.message,
     });
   }
+};
+
+module.exports = {
+  createTrip,
+  getAllTrips,
+  getTripById,
+  updateTrip,
+  deleteTrip,
 };

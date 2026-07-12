@@ -1,122 +1,105 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import TripList from "@/pages/trips/TripList";
+import AddTrip from "@/pages/trips/AddTrip";
+import EditTrip from "@/pages/trips/EditTrip";
+import MaintenanceList from "@/pages/maintenance/MaintenanceList";
+import AddMaintenance from "@/pages/maintenance/AddMaintenance";
 
-function App() {
-  const [count, setCount] = useState(0)
+const Dashboard = () => (
+  <div className="p-4 md:p-6 space-y-6">
+    <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+      <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Welcome to TransitOps. Select a module to get started.
+      </p>
+    </div>
 
+    <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
+      <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-foreground">Demo data guide</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Sample records were seeded to help you verify the workflows quickly.
+        </p>
+
+        <div className="mt-5 space-y-4 rounded-3xl border border-border bg-white p-4">
+          <div>
+            <p className="text-sm font-semibold text-slate-900">Demo vehicles</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
+              <li><strong>TR-1001</strong> — available</li>
+              <li><strong>TR-1002</strong> — available</li>
+              <li><strong>TR-1003</strong> — maintenance</li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-sm font-semibold text-slate-900">Demo drivers</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
+              <li><strong>Priya Singh</strong> — available</li>
+              <li><strong>Ravi Patel</strong> — available</li>
+              <li><strong>Anjali Kumar</strong> — leave</li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-sm font-semibold text-slate-900">Demo records</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
+              <li>One scheduled trip for vehicle <strong>TR-1001</strong></li>
+              <li>One maintenance record for vehicle <strong>TR-1003</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-5 rounded-3xl border border-border bg-white p-4 text-sm text-slate-600">
+          <p className="font-semibold text-slate-900">Quick start</p>
+          <ol className="mt-2 space-y-2 list-decimal pl-5">
+            <li>Open <strong>Trips</strong> and dispatch the scheduled trip.</li>
+            <li>Open <strong>Maintenance</strong> to view the pending work order.</li>
+            <li>Complete the maintenance to return vehicle <strong>TR-1003</strong> to available.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Link
+            to="/trips"
+            className="rounded-3xl border border-border bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <h2 className="text-lg font-semibold text-foreground">Trips</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Manage all trips, dispatch vehicles, and complete trip workflows.
+            </p>
+          </Link>
+          <Link
+            to="/maintenance"
+            className="rounded-3xl border border-border bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <h2 className="text-lg font-semibold text-foreground">Maintenance</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Track maintenance work, send vehicles to shop, and release them when complete.
+            </p>
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const App = () => {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
 
-      <div className="ticks"></div>
+        <Route path="/trips" element={<TripList />} />
+        <Route path="/trips/add" element={<AddTrip />} />
+        <Route path="/trips/edit/:id" element={<EditTrip />} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <Route path="/maintenance" element={<MaintenanceList />} />
+        <Route path="/maintenance/add" element={<AddMaintenance />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
-
-export default App
+export default App;

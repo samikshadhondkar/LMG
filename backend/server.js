@@ -2,6 +2,7 @@
 require("dns").setDefaultResultOrder("ipv4first");
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const connectDB = require('./config/db');
 
 const tripRoutes = require('./routes/tripRoutes');
@@ -14,6 +15,7 @@ console.log("Mongo URI:", process.env.MONGO_URI);
 connectDB();
 
 // Core middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TripForm from "@/components/trips/TripForm";
-import { createTrip } from "@/services/tripService";
+import MaintenanceForm from "@/components/maintenance/MaintenanceForm";
+import { createMaintenance } from "@/services/maintenanceService";
 
-export default function AddTrip() {
+export default function AddMaintenance() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -13,9 +13,9 @@ export default function AddTrip() {
     try {
       setLoading(true);
       setError("");
-      await createTrip(data);
-      setMessage("Trip created successfully.");
-      navigate("/trips");
+      await createMaintenance(data);
+      setMessage("Maintenance request created successfully.");
+      navigate("/maintenance");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -26,9 +26,9 @@ export default function AddTrip() {
   return (
     <div className="space-y-6 p-4 md:p-6">
       <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold text-foreground">Add Trip</h1>
+        <h1 className="text-2xl font-semibold text-foreground">Add Maintenance</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Create a new trip using the backend rules for vehicle and driver availability.
+          Create a maintenance record and send the vehicle to the shop immediately.
         </p>
       </div>
 
@@ -39,12 +39,12 @@ export default function AddTrip() {
       )}
 
       <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
-        <TripForm onSubmit={handleSubmit} />
+        <MaintenanceForm onSubmit={handleSubmit} />
         <div className="mt-6 flex gap-3">
           <button
             type="button"
             className="rounded-xl border border-border px-4 py-2 text-sm text-foreground"
-            onClick={() => navigate("/trips")}
+            onClick={() => navigate("/maintenance")}
           >
             Cancel
           </button>
@@ -54,7 +54,7 @@ export default function AddTrip() {
             className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
             onClick={() => document.querySelector('form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))}
           >
-            {loading ? "Saving..." : "Save Trip"}
+            {loading ? "Saving..." : "Save Maintenance"}
           </button>
         </div>
       </div>
